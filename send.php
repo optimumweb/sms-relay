@@ -5,9 +5,8 @@ define('ABS_PATH', dirname(__FILE__));
 
 require_once ABS_PATH . '/inc/init.php';
 
-$pdo = \OpenCrate\Model::get_PDO();
-
-app_log(var_export($pdo, true));
+//$pdo = \OpenCrate\Model::get_PDO();
+//app_log(var_export($pdo, true));
 
 if ( $sock = fopen('php://stdin', 'r') ) {
 

@@ -2,6 +2,7 @@
   "require": {
     "twilio/sdk": "5.10.0",
     "optimumweb/opencrate": "dev-master",
-    "optimumweb/php-email-reader-parser": "dev-master"
+    "optimumweb/php-email-reader-parser": "dev-master",
+    "composer require php-mime-mail-parser/php-mime-mail-parser": "2.9.1"
   }
 }

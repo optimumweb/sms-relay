@@ -12,7 +12,6 @@ class Message extends OpenCrate\Model
     protected $body;
     protected $twilio_message_sid;
     protected $created_at;
-    protected $is_delivered;
     protected $twilio_status;
 
     public function __toString()

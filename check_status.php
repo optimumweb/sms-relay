@@ -14,7 +14,7 @@ if ( defined('ADMIN_TOKEN') && !empty($_GET['admin_token']) && $_GET['admin_toke
 
     while ( time() - $start_time < $runtime ) {
 
-        $undelivered = Message::where('is_delivered', 0, [ 'limit' => 10 ]);
+        $undelivered = Message::where('twilio_status', '', [ 'limit' => 10 ]);
 
         if ( !empty($undelivered) ) {
 
@@ -28,6 +28,9 @@ if ( defined('ADMIN_TOKEN') && !empty($_GET['admin_token']) && $_GET['admin_toke
 
                         app_log($message . ' status: ' . $twilio_message->status);
 
+                        $message->twilio_status = $twilio_message->status;
+                        $message->save();
+
                         switch ( $twilio_message->status ) {
 
                             case 'sent':
@@ -38,10 +41,6 @@ if ( defined('ADMIN_TOKEN') && !empty($_GET['admin_token']) && $_GET['admin_toke
                                     sprintf("Your message to '%s' (%s) has been delivered successfully!\r\nMessage: %s", $message->to_tel, $message->reference, $message->body),
                                     sprintf("From: %s\r\nX-Mailer: PHP/%s", 'no-reply@' . SERVICE_DOMAIN, phpversion())
                                 );
-
-                                $message->is_delivered = 1;
-
-                                $message->save();
 
                                 break;
 

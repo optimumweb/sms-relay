@@ -10,7 +10,7 @@ if ( !empty($_POST['SmsSid']) && $message = Message::where('twilio_message_sid',
 
     if ( !empty($_POST['SmsStatus']) ) {
 
-        $message->status = $_POST['SmsStatus'];
+        $message->twilio_status = $_POST['SmsStatus'];
         $message->save();
 
         switch ( $_POST['SmsStatus'] ) {

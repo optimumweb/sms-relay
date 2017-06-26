@@ -21,7 +21,7 @@ if ( !empty($_POST['SmsSid']) && $message = Message::where('twilio_message_sid',
                     $message->from_email,
                     sprintf("SMS message to '%s' (%s) sent successfully!", $message->to_tel, $message->reference),
                     sprintf("Your message to '%s' (%s) has been delivered successfully!\r\nMessage: %s", $message->to_tel, $message->reference, $message->body),
-                    sprintf("From: %s\r\nX-Mailer: PHP/%s", 'no-reply@' . SERVICE_DOMAIN, phpversion())
+                    sprintf("From: %s\r\nX-Mailer: PHP/%s", $message->to_tel . '@' . SERVICE_DOMAIN, phpversion())
                 );
 
                 break;
@@ -32,7 +32,7 @@ if ( !empty($_POST['SmsSid']) && $message = Message::where('twilio_message_sid',
                     $message->from_email,
                     sprintf("SMS message to '%s' (%s) has failed!", $message->to_tel, $message->reference),
                     sprintf("Your message to '%s' (%s) has could not be delivered!\r\nMessage: %s", $message->to_tel, $message->reference, $message->body),
-                    sprintf("From: %s\r\nX-Mailer: PHP/%s", 'no-reply@' . SERVICE_DOMAIN, phpversion())
+                    sprintf("From: %s\r\nX-Mailer: PHP/%s", $message->to_tel . '@' . SERVICE_DOMAIN, phpversion())
                 );
 
                 break;

@@ -6,47 +6,63 @@ require_once ABS_PATH . '/inc/init.php';
 
 if ( defined('ADMIN_TOKEN') && !empty($_GET['admin_token']) && $_GET['admin_token'] == ADMIN_TOKEN ) {
 
-    $undelivered = Message::where('is_delivered', 0, [ 'limit' => 10 ]);
+    $runtime    = 60;
+    $sleep      = 15;
+    $start_time = time();
 
-    if ( !empty($undelivered) ) {
+    set_time_limit($runtime);
 
-        foreach ( $undelivered as $message ) {
+    while ( time() - $start_time < $runtime ) {
 
-            if ( $twilio_message = $message->twilio_message() ) {
+        $undelivered = Message::where('is_delivered', 0, [ 'limit' => 10 ]);
 
-                switch ( $twilio_message->Status ) {
+        if ( !empty($undelivered) ) {
 
-                    case 'sent':
+            foreach ( $undelivered as $message ) {
 
-                        app_log($message . ' is sent');
+                app_log($message . ": checking Twilio status");
 
-                        @mail(
-                            $message->from_email,
-                            sprintf("SMS message to '%s' (%s) sent successfully!", $message->to_tel, $message->reference),
-                            sprintf("Your message to '%s' (%s) has been delivered successfully!\r\nMessage: %s", $message->to_tel, $message->reference, $message->body),
-                            sprintf("From: %s\r\nX-Mailer: PHP/%s", 'no-reply@' . SERVICE_DOMAIN, phpversion())
-                        );
+                if ( $twilio_message = $message->twilio_message() ) {
 
-                        break;
+                    switch ( $twilio_message->Status ) {
 
-                    case 'failed':
+                        case 'sent':
 
-                        app_log($message . ' has failed');
+                            app_log($message . ' is sent');
 
-                        @mail(
-                            $message->from_email,
-                            sprintf("SMS message to '%s' (%s) has failed!", $message->to_tel, $message->reference),
-                            sprintf("Your message to '%s' (%s) has could not be delivered!\r\nMessage: %s", $message->to_tel, $message->reference, $message->body),
-                            sprintf("From: %s\r\nX-Mailer: PHP/%s", 'no-reply@' . SERVICE_DOMAIN, phpversion())
-                        );
+                            @mail(
+                                $message->from_email,
+                                sprintf("SMS message to '%s' (%s) sent successfully!", $message->to_tel, $message->reference),
+                                sprintf("Your message to '%s' (%s) has been delivered successfully!\r\nMessage: %s", $message->to_tel, $message->reference, $message->body),
+                                sprintf("From: %s\r\nX-Mailer: PHP/%s", 'no-reply@' . SERVICE_DOMAIN, phpversion())
+                            );
 
-                        break;
+                            break;
+
+                        case 'failed':
+
+                            app_log($message . ' has failed');
+
+                            @mail(
+                                $message->from_email,
+                                sprintf("SMS message to '%s' (%s) has failed!", $message->to_tel, $message->reference),
+                                sprintf("Your message to '%s' (%s) has could not be delivered!\r\nMessage: %s", $message->to_tel, $message->reference, $message->body),
+                                sprintf("From: %s\r\nX-Mailer: PHP/%s", 'no-reply@' . SERVICE_DOMAIN, phpversion())
+                            );
+
+                            break;
+
+                    }
 
                 }
 
             }
 
+        } else {
+            app_log('check_status: no messages to check');
         }
+
+        sleep($sleep);
 
     }
 

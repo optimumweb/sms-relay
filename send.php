@@ -64,6 +64,8 @@ if ( !empty($authorization_code) && $authorization_code == AUTHORIZATION_CODE ) 
 
             $message = $twilio_client->messages->create($tel, [ 'from' => TWILIO_SMS_FROM, 'body' => $body ] );
 
+            echo $message . PHP_EOL;
+
         } catch ( Exception $e ) {
 
         }

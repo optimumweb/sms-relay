@@ -45,11 +45,4 @@ class Message extends OpenCrate\Model
 
         return false;
     }
-
-    public function default_properties()
-    {
-        return [
-            'created_at' => time()
-        ];
-    }
 }

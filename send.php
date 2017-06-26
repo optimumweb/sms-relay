@@ -21,35 +21,43 @@ if ( !empty($stdin) ) {
 
         if ( $email = $email_parser->parse($stdin) ) {
 
-            if ( $email_domain = @explode('@', $email->from, 2)[1] ) {
+            if ( !empty($email->from) && $email_domain = @explode('@', $email->from, 2)[1] ) {
 
                 if ( defined('AUTHORIZED_DOMAIN') ) {
 
                     if ( $email_domain == AUTHORIZED_DOMAIN ) {
 
-                        if ( $tel = @explode('@', $email->to, 2)[0] ) {
+                        if ( defined('AUTHORIZATION_CODE') ) {
 
-                            if ( strpos($tel, '+1') === false ) {
-                                $tel = '+1' . $tel;
-                            }
+                            if ( !empty($email->subject) && $email->subject == AUTHORIZATION_CODE ) {
 
-                            $body = $email->plain();
+                                if ( !empty($email->to) && $tel = @explode('@', $email->to, 2)[0] ) {
 
-                            if ( !empty($body) ) {
+                                    if ( strpos($tel, '+1') === false ) {
+                                        $tel = '+1' . $tel;
+                                    }
 
-                                if ( strpos($body, '---') !== false ) {
-                                    $body = explode('---', $body)[0];
-                                }
+                                    $body = $email->plain();
 
-                                if ( !empty($body) ) {
+                                    if ( !empty($body) ) {
 
-                                    try {
+                                        if ( strpos($body, '---') !== false ) {
+                                            $body = explode('---', $body)[0];
+                                        }
 
-                                        $twilio_client = new Twilio\Rest\Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
+                                        if ( !empty($body) ) {
 
-                                        $message = $twilio_client->messages->create($tel, [ 'from' => TWILIO_SMS_FROM, 'body' => $body ] );
+                                            try {
 
-                                    } catch ( Exception $e ) {
+                                                $twilio_client = new Twilio\Rest\Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
+
+                                                $message = $twilio_client->messages->create($tel, [ 'from' => TWILIO_SMS_FROM, 'body' => $body ] );
+
+                                            } catch ( Exception $e ) {
+
+                                            }
+
+                                        }
 
                                     }
 

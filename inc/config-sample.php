@@ -2,8 +2,8 @@
 
 define('SERVICE_DOMAIN', '');
 
-define('AUTHORIZED_EMAILS',   '');
-define('AUTHORIZED_DOMAINS',  '');
+define('AUTHORIZED_EMAILS',   ''); // separate values with commas
+define('AUTHORIZED_DOMAINS',  ''); // separate values with commas
 
 define('DB_TYPE',    'mysql');
 define('DB_HOST',    'localhost');

@@ -15,7 +15,7 @@ if ( !empty($_POST['SmsSid']) && $message = Message::where('twilio_message_sid',
 
         switch ( $_POST['SmsStatus'] ) {
 
-            case 'sent':
+            case 'delivered':
 
                 @mail(
                     $message->from_email,
@@ -26,7 +26,7 @@ if ( !empty($_POST['SmsSid']) && $message = Message::where('twilio_message_sid',
 
                 break;
 
-            case 'failed':
+            case 'undelivered':
 
                 @mail(
                     $message->from_email,

@@ -6,8 +6,6 @@ require_once ABS_PATH . '/inc/init.php';
 
 if ( !empty($_POST) ) {
 
-    app_log('incoming message: ' . var_export($_POST, true));
-
     $to   = $_POST['To'];
     $from = $_POST['From'];
     $body = $_POST['Body'];

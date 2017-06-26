@@ -48,7 +48,7 @@ class Message extends OpenCrate\Model
         return false;
     }
 
-    public function twilio_message()
+    public function get_twilio_message()
     {
         if ( defined('TWILIO_ACCOUNT_SID') && defined('TWILIO_AUTH_TOKEN') ) {
 

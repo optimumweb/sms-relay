@@ -76,6 +76,8 @@ if ( !empty($authorization_code) && $authorization_code == AUTHORIZATION_CODE ) 
 
                 if ( $message->save() ) {
                     app_log($message . " saved!");
+                } else {
+                    app_log($message . " could not be saved: " . OpenCrate\Model::$pdo->errorInfo());
                 }
 
             }

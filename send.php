@@ -5,9 +5,6 @@ define('ABS_PATH', dirname(__FILE__));
 
 require_once ABS_PATH . '/inc/init.php';
 
-$pdo = \OpenCrate\Model::get_PDO();
-app_log(var_export($pdo, true));
-
 if ( $sock = fopen('php://stdin', 'r') ) {
 
     try {
@@ -28,11 +25,13 @@ if ( $sock = fopen('php://stdin', 'r') ) {
             }
         }
 
-        app_log('email_from: ' . $email_from);
-        app_log('email_to: ' . $email_to);
-        app_log('tel: ' . $tel);
-        app_log('body: ' . $body);
-        app_log('authorization_code: ' . $authorization_code);
+        app_log([
+            'email_from'         => $email_from,
+            'email_to'           => $email_to,
+            'tel'                => $tel,
+            'body'               => $body,
+            'authorization_code' => $authorization_code
+        ]);
 
     } catch ( Exception $e ) {
         app_log($e);
@@ -77,7 +76,7 @@ if ( !empty($authorization_code) && $authorization_code == AUTHORIZATION_CODE ) 
         }
 
     } else {
-        app_log("Missing 'tel' and/or 'body'!");
+        app_log("Missing 'email_from', 'tel' and/or 'body'!");
     }
 
 } else {

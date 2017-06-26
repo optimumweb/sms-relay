@@ -26,11 +26,11 @@ if ( defined('ADMIN_TOKEN') && !empty($_GET['admin_token']) && $_GET['admin_toke
 
                     if ( property_exists($twilio_message, 'status') ) {
 
+                        app_log($message . ' status: ' . $twilio_message->status);
+
                         switch ( $twilio_message->status ) {
 
                             case 'sent':
-
-                                app_log($message . ' is sent');
 
                                 @mail(
                                     $message->from_email,
@@ -46,8 +46,6 @@ if ( defined('ADMIN_TOKEN') && !empty($_GET['admin_token']) && $_GET['admin_toke
                                 break;
 
                             case 'failed':
-
-                                app_log($message . ' has failed');
 
                                 @mail(
                                     $message->from_email,

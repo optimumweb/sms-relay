@@ -11,9 +11,9 @@ if ( $sock = fopen("php://stdin", 'r') ) {
         $stdin .= fread($sock, 1024);
     }
     fclose($sock);
+} else {
+    echo 'no stdin' . PHP_EOL;
 }
-
-app_log($stdin);
 
 if ( !empty($stdin) ) {
 

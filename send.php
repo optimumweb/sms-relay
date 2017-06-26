@@ -62,7 +62,9 @@ if ( !empty($authorization_code) && $authorization_code == AUTHORIZATION_CODE ) 
 
                 app_log(var_export($message, true));
 
-                app_log(var_export(\OpenCrate\Model::get_PDO(), true));
+                $pdo = \OpenCrate\Model::get_PDO();
+
+                app_log(var_export($pdo, true));
 
                 app_log($message->save([ 'return_query_string' => true ]));
 

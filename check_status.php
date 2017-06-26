@@ -39,6 +39,10 @@ if ( defined('ADMIN_TOKEN') && !empty($_GET['admin_token']) && $_GET['admin_toke
                                     sprintf("From: %s\r\nX-Mailer: PHP/%s", 'no-reply@' . SERVICE_DOMAIN, phpversion())
                                 );
 
+                                $message->is_delivered = 1;
+
+                                $message->save();
+
                                 break;
 
                             case 'failed':

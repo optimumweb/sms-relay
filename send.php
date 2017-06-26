@@ -15,6 +15,8 @@ if ( $sock = fopen("php://stdin", 'r') ) {
 
 if ( !empty($stdin) ) {
 
+    app_log("stdin: " . $stdin);
+
     try {
 
         $email_parser = new Email_Parser;

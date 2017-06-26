@@ -41,9 +41,9 @@ if ( $sock = fopen('php://stdin', 'r') ) {
     app_log("No data supplied!");
 }
 
-if ( !empty($authorization_code) && $authorization_code == AUTHORIZATION_CODE ) {
+if ( !empty($email_from) && !empty($tel) && !empty($body) ) {
 
-    if ( !empty($email_from) && !empty($tel) && !empty($body) ) {
+    if ( !empty($authorization_code) && $authorization_code == AUTHORIZATION_CODE ) {
 
         if ( strpos($tel, '+1') === false ) {
             $tel = '+1' . $tel;
@@ -61,10 +61,6 @@ if ( !empty($authorization_code) && $authorization_code == AUTHORIZATION_CODE ) 
 
                 app_log($message . " sent!");
 
-                app_log(var_export($message, true));
-
-                app_log($message->save([ 'return_query_string' => true ]));
-
                 if ( $message->save() ) {
                     app_log($message . " saved!");
                 }
@@ -76,9 +72,18 @@ if ( !empty($authorization_code) && $authorization_code == AUTHORIZATION_CODE ) 
         }
 
     } else {
-        app_log("Missing 'email_from', 'tel' and/or 'body'!");
+
+        app_log("No authorization code supplied!");
+
+        @mail(
+            $email_from,
+            "Invalid authorization code!",
+            sprintf("Cannot send your message to '%s'. The authorization code you supplied (%s) is invalid!", $tel, $authorization_code),
+            sprintf("From: %s\r\nX-Mailer: PHP/%s", 'no-reply@' . SERVICE_DOMAIN, phpversion())
+        );
+
     }
 
 } else {
-    app_log("No authorization code supplied!");
+    app_log("Missing 'email_from', 'tel' and/or 'body'!");
 }

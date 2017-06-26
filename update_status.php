@@ -4,11 +4,11 @@ define('ABS_PATH', dirname(__FILE__));
 
 require_once ABS_PATH . '/inc/init.php';
 
-app_log(var_export($_POST, true));
-
 if ( !empty($_POST['SmsSid']) && $message = Message::where('twilio_message_sid', $_POST['SmsSid'], [ 'first' => true ]) ) {
 
     if ( !empty($_POST['SmsStatus']) ) {
+
+        app_log($message . ' status updated to ' . $_POST['SmsStatus']);
 
         $message->twilio_status = $_POST['SmsStatus'];
         $message->save();

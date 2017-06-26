@@ -47,6 +47,7 @@ function get_string_between($str, $start, $end, $first_only = true)
         foreach ( str_split($str) as $char ) {
             if ( $char == $start ) {
                 $on = true;
+                continue;
             } elseif ( $char == $end ) {
                 $on = false;
                 if ( $first_only ) {

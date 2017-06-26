@@ -1,5 +1,7 @@
 <?php
 
+define('SERVICE_DOMAIN', '');
+
 define('AUTHORIZED_DOMAIN',  '');
 define('AUTHORIZATION_CODE', '');
 

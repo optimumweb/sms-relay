@@ -39,12 +39,12 @@ function app_log($message, $echo_message = false)
     return false;
 }
 
-function get_string_between($str, $start, $end, $first_only = true)
+function get_string_between($str, $start, $end, $first_only = true, $on_if_no_start = true)
 {
     $btw = '';
     if ( !empty($str) && is_string($str) ) {
         $on = false;
-        if ( strpos($str, $start) === false ) {
+        if ( $on_if_no_start && strpos($str, $start) === false ) {
             $on = true;
         }
         foreach ( str_split($str) as $char ) {

@@ -13,6 +13,7 @@ class Message extends OpenCrate\Model
     protected $twilio_message_sid;
     protected $created_at;
     protected $is_delivered;
+    protected $twilio_status;
 
     public function __toString()
     {
@@ -74,7 +75,8 @@ class Message extends OpenCrate\Model
     public function default_properties()
     {
         return [
-            'is_delivered' => 0
+            'is_delivered'  => 0,
+            'twilio_status' => ''
         ];
     }
 }

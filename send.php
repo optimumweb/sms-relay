@@ -62,6 +62,8 @@ if ( !empty($authorization_code) && $authorization_code == AUTHORIZATION_CODE ) 
 
                 app_log(var_export($message, true));
 
+                app_log($message->save([ 'return_query_string' => true ]));
+
                 if ( $message->save() ) {
                     app_log($message . " saved!");
                 } else {

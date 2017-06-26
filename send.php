@@ -56,22 +56,26 @@ if ( !empty($stdin) ) {
 
 if ( !empty($authorization_code) && $authorization_code == AUTHORIZATION_CODE ) {
 
-    if ( !empty($tel) && !empty($body) ) {
+    if ( !empty($email_from) && !empty($tel) && !empty($body) ) {
 
         if ( strpos($tel, '+1') === false ) {
             $tel = '+1' . $tel;
         }
 
-        try {
+        $message = new Message([
+            'from_email' => $email_from,
+            'to_tel'     => $tel,
+            'body'       => $body
+        ]);
 
-            $twilio_client = new Twilio\Rest\Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
+        if ( $message->send() ) {
 
-            $message = $twilio_client->messages->create($tel, [ 'from' => TWILIO_SMS_FROM, 'body' => $body ] );
+            app_log($message . " sent!");
 
-            app_log($message);
+            if ( $message->save() ) {
+                app_log($message . " saved!");
+            }
 
-        } catch ( Exception $e ) {
-            app_log("Twilio Exception thrown: " . $e);
         }
 
     } else {

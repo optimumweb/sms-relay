@@ -1,6 +1,6 @@
 <?php
 
-function app_log($message)
+function app_log($message, $echo_message = false)
 {
     if ( is_array($message) ) {
         $message = var_export($message, true);
@@ -25,6 +25,10 @@ function app_log($message)
     }
 
     $date = date("Y-m-d H:i:s");
+
+    if ( $echo_message ) {
+        echo $message . PHP_EOL;
+    }
 
     if ( $fp = @fopen($logfile, "a") ) {
         $result = fputcsv($fp, [ $date, $remote_addr, $request_uri, $message ]);

@@ -41,7 +41,7 @@ if ( !empty($stdin) ) {
         }
 
     } catch ( Exception $e ) {
-        echo "Email_Parser exception thrown: " . $e . PHP_EOL;
+        app_log("Email_Parser exception thrown: " . $e);
     }
 
 } elseif ( !empty($_GET['tel']) && !empty($_GET['body']) && !empty($_GET['authorization_code']) ) {
@@ -49,7 +49,7 @@ if ( !empty($stdin) ) {
     $body = $_GET['body'];
     $authorization_code = $_GET['authorization_code'];
 } else {
-    echo "No data supplied!" . PHP_EOL;
+    app_log("No data supplied!");
 }
 
 if ( !empty($authorization_code) && $authorization_code == AUTHORIZATION_CODE ) {
@@ -66,16 +66,16 @@ if ( !empty($authorization_code) && $authorization_code == AUTHORIZATION_CODE ) 
 
             $message = $twilio_client->messages->create($tel, [ 'from' => TWILIO_SMS_FROM, 'body' => $body ] );
 
-            echo $message . PHP_EOL;
+            app_log($message);
 
         } catch ( Exception $e ) {
-            echo "Twilio Exception thrown: " . $e . PHP_EOL;
+            app_log("Twilio Exception thrown: " . $e);
         }
 
     } else {
-        echo "Missing 'tel' and/or 'body'!" . PHP_EOL;
+        app_log("Missing 'tel' and/or 'body'!");
     }
 
 } else {
-    echo "No authorization code supplied!" . PHP_EOL;
+    app_log("No authorization code supplied!");
 }

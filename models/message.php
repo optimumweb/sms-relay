@@ -30,7 +30,11 @@ class Message extends OpenCrate\Model
 
                 $twilio_client = new Twilio\Rest\Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 
-                $options = [ 'from' => TWILIO_SMS_FROM, 'body' => $this->body ];
+                $options = [
+                    'from'           => TWILIO_SMS_FROM,
+                    'body'           => $this->body,
+                    'statusCallback' => SERVICE_DOMAIN . '/update_status.php'
+                ];
 
                 $message = $twilio_client->messages->create($this->to_tel, $options);
 

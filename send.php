@@ -13,6 +13,8 @@ if ( $sock = fopen("php://stdin", 'r') ) {
     fclose($sock);
 }
 
+app_log($stdin);
+
 if ( !empty($stdin) ) {
 
     try {

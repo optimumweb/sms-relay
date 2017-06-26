@@ -41,13 +41,15 @@ if ( !empty($stdin) ) {
         }
 
     } catch ( Exception $e ) {
-
+        echo "Email_Parser exception thrown: " . $e . PHP_EOL;
     }
 
 } elseif ( !empty($_GET['tel']) && !empty($_GET['body']) && !empty($_GET['authorization_code']) ) {
     $tel = $_GET['tel'];
     $body = $_GET['body'];
     $authorization_code = $_GET['authorization_code'];
+} else {
+    echo "No data supplied!" . PHP_EOL;
 }
 
 if ( !empty($authorization_code) && $authorization_code == AUTHORIZATION_CODE ) {
@@ -67,9 +69,13 @@ if ( !empty($authorization_code) && $authorization_code == AUTHORIZATION_CODE ) 
             echo $message . PHP_EOL;
 
         } catch ( Exception $e ) {
-
+            echo "Twilio Exception thrown: " . $e . PHP_EOL;
         }
 
+    } else {
+        echo "Missing 'tel' and/or 'body'!" . PHP_EOL;
     }
 
+} else {
+    echo "No authorization code supplied!" . PHP_EOL;
 }

@@ -33,6 +33,7 @@ if ( !empty($stdin) ) {
                 }
             }
 
+            app_log('stdin: ' . $stdin);
             app_log('email_from: ' . $email_from);
             app_log('email_to: ' . $email_to);
             app_log('tel: ' . $tel);

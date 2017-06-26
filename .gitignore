@@ -4,4 +4,3 @@ error_log
 composer.lock
 /vendor
 /inc/config.php
-/logs

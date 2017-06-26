@@ -2,8 +2,8 @@
 
 define('SERVICE_DOMAIN', '');
 
-define('AUTHORIZED_DOMAIN',  '');
-define('AUTHORIZATION_CODE', '');
+define('AUTHORIZED_EMAILS',   '');
+define('AUTHORIZED_DOMAINS',  '');
 
 define('DB_TYPE',    'mysql');
 define('DB_HOST',    'localhost');

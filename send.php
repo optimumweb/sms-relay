@@ -5,6 +5,8 @@ define('ABS_PATH', dirname(__FILE__));
 
 require_once ABS_PATH . '/inc/init.php';
 
+$authorized = false;
+
 if ( $sock = fopen('php://stdin', 'r') ) {
 
     try {
@@ -19,18 +21,33 @@ if ( $sock = fopen('php://stdin', 'r') ) {
         $tel  = @explode('@', $email_to, 2)[0];
         $body = @explode('---', $email_parser->getMessageBody('text'))[0];
 
-        if ( !empty($email_from) && $email_domain = @explode('@', $email_from, 2)[1] ) {
-            if ( $email_domain == AUTHORIZED_DOMAIN ) {
-                $authorization_code = $email_parser->getHeader('subject');
+        if ( !empty($email_from) ) {
+
+            if ( defined('AUTHORIZED_EMAILS') ) {
+                $authorized_emails = array_map('trim', explode(',', AUTHORIZED_EMAILS));
+                if ( in_array($email_from, $authorized_emails) ) {
+                    $authorized = true;
+                }
             }
+
+            if ( !$authorized ) {
+                if ( defined('AUTHORIZED_DOMAINS') ) {
+                    $authorized_domains = array_map('trim', explode(',', AUTHORIZED_DOMAINS));
+                    $email_domain = @explode('@', $email_from, 2)[1];
+                    if ( in_array($email_domain, $authorized_domains) ) {
+                        $authorized = true;
+                    }
+                }
+            }
+
         }
 
         app_log([
-            'email_from'         => $email_from,
-            'email_to'           => $email_to,
-            'tel'                => $tel,
-            'body'               => $body,
-            'authorization_code' => $authorization_code
+            'email_from' => $email_from,
+            'email_to'   => $email_to,
+            'tel'        => $tel,
+            'body'       => $body,
+            'headers'    => $email_parser->getHeaders()
         ]);
 
     } catch ( Exception $e ) {
@@ -43,7 +60,7 @@ if ( $sock = fopen('php://stdin', 'r') ) {
 
 if ( !empty($email_from) && !empty($tel) && !empty($body) ) {
 
-    if ( !empty($authorization_code) && $authorization_code == AUTHORIZATION_CODE ) {
+    if ( $authorized ) {
 
         if ( strpos($tel, '+1') === false ) {
             $tel = '+1' . $tel;
@@ -77,8 +94,8 @@ if ( !empty($email_from) && !empty($tel) && !empty($body) ) {
 
         @mail(
             $email_from,
-            "Invalid authorization code!",
-            sprintf("Cannot send your message to '%s'. The authorization code you supplied (%s) is invalid!", $tel, $authorization_code),
+            "Not authorized!",
+            sprintf("Cannot send your message to '%s'. Your email address (%s) is unauthorized!", $tel, $email_from),
             sprintf("From: %s\r\nX-Mailer: PHP/%s", 'no-reply@' . SERVICE_DOMAIN, phpversion())
         );
 

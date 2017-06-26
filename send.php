@@ -46,8 +46,7 @@ if ( $sock = fopen('php://stdin', 'r') ) {
             'email_from' => $email_from,
             'email_to'   => $email_to,
             'tel'        => $tel,
-            'body'       => $body,
-            'headers'    => $email_parser->getHeaders()
+            'body'       => $body
         ]);
 
     } catch ( Exception $e ) {

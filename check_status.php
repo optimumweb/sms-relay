@@ -56,6 +56,8 @@ if ( defined('ADMIN_TOKEN') && !empty($_GET['admin_token']) && $_GET['admin_toke
 
                         }
 
+                    } else {
+                        app_log('Twilio status undefined');
                     }
 
                 }

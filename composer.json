@@ -1,0 +1,6 @@
+{
+  "require": {
+    "twilio/sdk": "5.10.0",
+    "optimumweb/php-email-reader-parser": "dev-master"
+  }
+}

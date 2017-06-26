@@ -33,7 +33,7 @@ class Message extends OpenCrate\Model
                 $options = [
                     'from'           => TWILIO_SMS_FROM,
                     'body'           => $this->body,
-                    'statusCallback' => SERVICE_DOMAIN . '/update_status.php'
+                    'statusCallback' => 'http://' . SERVICE_DOMAIN . '/update_status.php'
                 ];
 
                 $message = $twilio_client->messages->create($this->to_tel, $options);

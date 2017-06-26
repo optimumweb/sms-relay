@@ -38,3 +38,30 @@ function app_log($message, $echo_message = false)
 
     return false;
 }
+
+function get_string_between($str, $start, $end, $first_only = true)
+{
+    $btw = '';
+    if ( !empty($str) && is_string($str) ) {
+        $on = false;
+        foreach ( str_split($str) as $char ) {
+            if ( $char == $start ) {
+                $on = true;
+            } elseif ( $char == $end ) {
+                $on = false;
+                if ( $first_only ) {
+                    return $btw;
+                }
+            }
+            if ( $on ) {
+                $btw .= $char;
+            }
+        }
+    }
+    return $btw;
+}
+
+function parse_email_address($str)
+{
+    return get_string_between($str, '<', '>');
+}

@@ -21,24 +21,24 @@ if ( !empty($stdin) ) {
 
         if ( $email = $email_parser->parse($stdin) ) {
 
-            app_log('from: ' . $email->from);
-            app_log('to: ' . $email->to);
+            $email_from = parse_email_address($email->from);
+            $email_to = parse_email_address($email->to);
 
-            if ( !empty($email->from) && $email_domain = @explode('@', $email->from, 2)[1] ) {
+            app_log('from: ' . $email_from);
+            app_log('to: ' . $email_to);
 
+            $tel = @explode('@', $email_to, 2)[0];
+
+            if ( !empty($email_from) && $email_domain = @explode('@', $email_from, 2)[1] ) {
                 if ( $email_domain == AUTHORIZED_DOMAIN ) {
-
                     $authorization_code = $email->subject;
-                    $tel = @explode('@', $email->to, 2)[0];
-
-                    $body = $email->plain();
-
-                    if ( !empty($body) && strpos($body, '---') !== false ) {
-                        $body = explode('---', $body)[0];
-                    }
-
                 }
+            }
 
+            $body = $email->plain();
+
+            if ( !empty($body) && strpos($body, '---') !== false ) {
+                $body = explode('---', $body)[0];
             }
 
         }

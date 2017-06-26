@@ -21,11 +21,11 @@ if ( !empty($stdin) ) {
 
         if ( $email = $email_parser->parse($stdin) ) {
 
-            app_log('subject: ' . $email->subject);
-
             if ( !empty($email->from) && $email_domain = @explode('@', $email->from, 2)[1] ) {
 
-                if ( defined('AUTHORIZED_DOMAIN') && $email_domain == AUTHORIZED_DOMAIN ) {
+                app_log('domain: ' . $email_domain);
+
+                if ( $email_domain == AUTHORIZED_DOMAIN ) {
 
                     $authorization_code = $email->subject;
                     $tel = @explode('@', $email->to, 2)[0];

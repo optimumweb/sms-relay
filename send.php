@@ -25,7 +25,7 @@ if ( !empty($stdin) ) {
             $email_to   = parse_email_address($email->to);
 
             $tel  = @explode('@', $email_to, 2)[0];
-            $body = @explode('---', $email->plain())[0];
+            $body = @explode('---', $email->body)[0];
 
             if ( !empty($email_from) && $email_domain = @explode('@', $email_from, 2)[1] ) {
                 if ( $email_domain == AUTHORIZED_DOMAIN ) {

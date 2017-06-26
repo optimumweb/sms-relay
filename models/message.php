@@ -12,6 +12,7 @@ class Message extends OpenCrate\Model
     protected $body;
     protected $twilio_message_sid;
     protected $created_at;
+    protected $is_delivered;
 
     public function __toString()
     {
@@ -45,5 +46,35 @@ class Message extends OpenCrate\Model
         }
 
         return false;
+    }
+
+    public function twilio_message()
+    {
+        if ( defined('TWILIO_ACCOUNT_SID') && defined('TWILIO_AUTH_TOKEN') ) {
+
+            if ( $this->twilio_message_sid !== null ) {
+
+                try {
+
+                    $twilio_client = new Twilio\Rest\Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
+
+                    return $twilio_client->messages($this->twilio_message_sid)->fetch();
+
+                } catch ( Exception $e ) {
+                    app_log("Message::twilio_message - Exception thrown: " . $e);
+                }
+
+            }
+
+        }
+
+        return false;
+    }
+
+    public function default_properties()
+    {
+        return [
+            'is_delivered' => 0
+        ];
     }
 }

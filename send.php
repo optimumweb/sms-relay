@@ -63,13 +63,6 @@ if ( $sock = fopen('php://stdin', 'r') ) {
 
                             app_log($message . " sent!");
 
-                            @mail(
-                                $email_from,
-                                sprintf("SMS message to '%s' (%s) sent successfully!", $tel, $reference),
-                                sprintf("Your message to '%s' (%s) has been delivered successfully!\r\nMessage: %s", $tel, $reference, $body),
-                                sprintf("From: %s\r\nX-Mailer: PHP/%s", 'no-reply@' . SERVICE_DOMAIN, phpversion())
-                            );
-
                             if ( $message->save() ) {
                                 app_log($message . " saved!");
                             }

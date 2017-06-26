@@ -2,6 +2,8 @@
 
 define('SERVICE_DOMAIN', '');
 
+define('ADMIN_TOKEN', '');
+
 define('AUTHORIZED_EMAILS',   ''); // separate values with commas
 define('AUTHORIZED_DOMAINS',  ''); // separate values with commas
 

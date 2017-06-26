@@ -62,20 +62,26 @@ if ( !empty($authorization_code) && $authorization_code == AUTHORIZATION_CODE ) 
             $tel = '+1' . $tel;
         }
 
-        $message = new Message([
-            'from_email' => $email_from,
-            'to_tel'     => $tel,
-            'body'       => $body
-        ]);
+        try {
 
-        if ( $message->send() ) {
+            $message = new Message([
+                'from_email' => $email_from,
+                'to_tel'     => $tel,
+                'body'       => $body
+            ]);
 
-            app_log($message . " sent!");
+            if ( $message->send() ) {
 
-            if ( $message->save() ) {
-                app_log($message . " saved!");
+                app_log($message . " sent!");
+
+                if ( $message->save() ) {
+                    app_log($message . " saved!");
+                }
+
             }
 
+        } catch ( Exception $e ) {
+            app_log($e);
         }
 
     } else {

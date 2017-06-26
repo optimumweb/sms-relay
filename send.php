@@ -18,36 +18,86 @@ if ( $sock = fopen('php://stdin', 'r') ) {
         $email_from = parse_email_address($email_parser->getHeader('from'));
         $email_to   = parse_email_address($email_parser->getHeader('to'));
 
+        $reference = $email_parser->getHeader('subject');
+
         $tel  = @explode('@', $email_to, 2)[0];
         $body = @explode('---', $email_parser->getMessageBody('text'))[0];
 
-        if ( !empty($email_from) ) {
+        if ( !empty($tel) && !empty($body) ) {
 
-            if ( defined('AUTHORIZED_EMAILS') ) {
-                $authorized_emails = array_map('trim', explode(',', AUTHORIZED_EMAILS));
-                if ( in_array($email_from, $authorized_emails) ) {
-                    $authorized = true;
-                }
-            }
+            if ( !empty($email_from) ) {
 
-            if ( !$authorized ) {
-                if ( defined('AUTHORIZED_DOMAINS') ) {
-                    $authorized_domains = array_map('trim', explode(',', AUTHORIZED_DOMAINS));
-                    $email_domain = @explode('@', $email_from, 2)[1];
-                    if ( in_array($email_domain, $authorized_domains) ) {
+                if ( defined('AUTHORIZED_EMAILS') ) {
+                    $authorized_emails = array_map('trim', explode(',', AUTHORIZED_EMAILS));
+                    if ( in_array($email_from, $authorized_emails) ) {
                         $authorized = true;
                     }
                 }
+
+                if ( !$authorized ) {
+                    if ( defined('AUTHORIZED_DOMAINS') ) {
+                        $authorized_domains = array_map('trim', explode(',', AUTHORIZED_DOMAINS));
+                        $email_domain = @explode('@', $email_from, 2)[1];
+                        if ( in_array($email_domain, $authorized_domains) ) {
+                            $authorized = true;
+                        }
+                    }
+                }
+
+                if ( $authorized ) {
+
+                    if ( strpos($tel, '+1') === false ) {
+                        $tel = '+1' . $tel;
+                    }
+
+                    try {
+
+                        $message = new Message([
+                            'from_email' => $email_from,
+                            'to_tel'     => $tel,
+                            'reference'  => $reference,
+                            'body'       => $body
+                        ]);
+
+                        if ( $message->send() ) {
+
+                            app_log($message . " sent!");
+
+                            @mail(
+                                $email_from,
+                                sprintf("SMS message to '%s' (%s) sent successfully!", $tel, $reference),
+                                sprintf("Your message to '%s' (%s) has been delivered successfully!r\nMessage: %s", $tel, $reference, $body),
+                                sprintf("From: %s\r\nX-Mailer: PHP/%s", 'no-reply@' . SERVICE_DOMAIN, phpversion())
+                            );
+
+                            if ( $message->save() ) {
+                                app_log($message . " saved!");
+                            }
+
+                        }
+
+                    } catch ( Exception $e ) {
+                        app_log($e);
+                    }
+
+                } else {
+
+                    app_log("No authorization code supplied!");
+
+                    @mail(
+                        $email_from,
+                        sprintf("SMS message to '%s' (%s) not authorized!", $tel, $reference),
+                        sprintf("Cannot send your message to '%s'. Your email address (%s) is unauthorized!", $tel, $email_from),
+                        sprintf("From: %s\r\nX-Mailer: PHP/%s", 'no-reply@' . SERVICE_DOMAIN, phpversion())
+                    );
+
+                }
+
             }
 
+        } else {
+            app_log("Missing 'tel' and/or 'body'!");
         }
-
-        app_log([
-            'email_from' => $email_from,
-            'email_to'   => $email_to,
-            'tel'        => $tel,
-            'body'       => $body
-        ]);
 
     } catch ( Exception $e ) {
         app_log($e);
@@ -57,56 +107,3 @@ if ( $sock = fopen('php://stdin', 'r') ) {
     app_log("No data supplied!");
 }
 
-if ( !empty($email_from) && !empty($tel) && !empty($body) ) {
-
-    if ( $authorized ) {
-
-        if ( strpos($tel, '+1') === false ) {
-            $tel = '+1' . $tel;
-        }
-
-        try {
-
-            $message = new Message([
-                'from_email' => $email_from,
-                'to_tel'     => $tel,
-                'body'       => $body
-            ]);
-
-            if ( $message->send() ) {
-
-                app_log($message . " sent!");
-
-                @mail(
-                    $email_from,
-                    sprintf("SMS message to '%s' sent successfully!", $tel),
-                    sprintf("Your message to '%s' has been delivered successfully!\r\nMessage: %s", $tel, $body),
-                    sprintf("From: %s\r\nX-Mailer: PHP/%s", 'no-reply@' . SERVICE_DOMAIN, phpversion())
-                );
-
-                if ( $message->save() ) {
-                    app_log($message . " saved!");
-                }
-
-            }
-
-        } catch ( Exception $e ) {
-            app_log($e);
-        }
-
-    } else {
-
-        app_log("No authorization code supplied!");
-
-        @mail(
-            $email_from,
-            sprintf("SMS message to '%s' not authorized!", $tel),
-            sprintf("Cannot send your message to '%s'. Your email address (%s) is unauthorized!", $tel, $email_from),
-            sprintf("From: %s\r\nX-Mailer: PHP/%s", 'no-reply@' . SERVICE_DOMAIN, phpversion())
-        );
-
-    }
-
-} else {
-    app_log("Missing 'email_from', 'tel' and/or 'body'!");
-}

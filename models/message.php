@@ -8,6 +8,7 @@ class Message extends OpenCrate\Model
     protected $id;
     protected $from_email;
     protected $to_tel;
+    protected $reference;
     protected $body;
     protected $twilio_message_sid;
     protected $created_at;
@@ -15,8 +16,8 @@ class Message extends OpenCrate\Model
     public function __toString()
     {
         return sprintf(
-            "[SMSRelay.Message id=%s from_email=%s to_tel=%s body=%s twilio_message_id=%s created_at=%s]",
-            $this->id, $this->from_email, $this->to_tel, $this->body, $this->twilio_message_sid, $this->created_at
+            "[SMSRelay.Message id=%s from_email=%s to_tel=%s reference=%s body=%s twilio_message_id=%s created_at=%s]",
+            $this->id, $this->from_email, $this->to_tel, $this->reference, $this->body, $this->twilio_message_sid, $this->created_at
         );
     }
 

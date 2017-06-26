@@ -77,6 +77,13 @@ if ( !empty($email_from) && !empty($tel) && !empty($body) ) {
 
                 app_log($message . " sent!");
 
+                @mail(
+                    $email_from,
+                    "Success!",
+                    sprintf("Your message to '%s' has been delivered successfully!", $tel),
+                    sprintf("From: %s\r\nX-Mailer: PHP/%s", 'no-reply@' . SERVICE_DOMAIN, phpversion())
+                );
+
                 if ( $message->save() ) {
                     app_log($message . " saved!");
                 }

@@ -15,13 +15,13 @@ if ( $sock = fopen("php://stdin", 'r') ) {
 
 if ( !empty($stdin) ) {
 
-    app_log("stdin: " . $stdin);
-
     try {
 
         $email_parser = new Email_Parser;
 
         if ( $email = $email_parser->parse($stdin) ) {
+
+            app_log('stdin email: ' . $email);
 
             if ( !empty($email->from) && $email_domain = @explode('@', $email->from, 2)[1] ) {
 

@@ -79,8 +79,8 @@ if ( !empty($email_from) && !empty($tel) && !empty($body) ) {
 
                 @mail(
                     $email_from,
-                    "Success!",
-                    sprintf("Your message to '%s' has been delivered successfully!", $tel),
+                    sprintf("SMS message to '%s' sent successfully!", $tel),
+                    sprintf("Your message to '%s' has been delivered successfully!\r\nMessage: %s", $tel, $body),
                     sprintf("From: %s\r\nX-Mailer: PHP/%s", 'no-reply@' . SERVICE_DOMAIN, phpversion())
                 );
 
@@ -100,7 +100,7 @@ if ( !empty($email_from) && !empty($tel) && !empty($body) ) {
 
         @mail(
             $email_from,
-            "Not authorized!",
+            sprintf("SMS message to '%s' not authorized!", $tel),
             sprintf("Cannot send your message to '%s'. Your email address (%s) is unauthorized!", $tel, $email_from),
             sprintf("From: %s\r\nX-Mailer: PHP/%s", 'no-reply@' . SERVICE_DOMAIN, phpversion())
         );

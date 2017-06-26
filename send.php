@@ -21,7 +21,7 @@ if ( $sock = fopen('php://stdin', 'r') ) {
         $reference = $email_parser->getHeader('subject');
 
         $tel  = @explode('@', $email_to, 2)[0];
-        $body = @explode('---', $email_parser->getMessageBody('text'))[0];
+        $body = @explode("\n\n", str_replace("\r", "\n", $email_parser->getMessageBody('text')))[0];
 
         if ( !empty($tel) && !empty($body) ) {
 

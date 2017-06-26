@@ -24,6 +24,8 @@ if ( defined('ADMIN_TOKEN') && !empty($_GET['admin_token']) && $_GET['admin_toke
 
                 if ( $twilio_message = $message->get_twilio_message() ) {
 
+                    app_log($twilio_message);
+
                     if ( property_exists($twilio_message, 'Status') ) {
 
                         switch ( $twilio_message->Status ) {

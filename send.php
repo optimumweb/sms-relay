@@ -59,7 +59,7 @@ if ( !empty($authorization_code) && $authorization_code == AUTHORIZATION_CODE ) 
             if ( $message->send() ) {
 
                 app_log($message . " sent!");
-                
+
                 app_log(var_export($message, true));
 
                 if ( $message->save() ) {

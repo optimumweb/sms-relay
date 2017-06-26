@@ -21,7 +21,7 @@ if ( !empty($stdin) ) {
 
         if ( $email = $email_parser->parse($stdin) ) {
 
-            app_log('stdin email: ' . $email);
+            app_log('subject: ' . $email->subject);
 
             if ( !empty($email->from) && $email_domain = @explode('@', $email->from, 2)[1] ) {
 

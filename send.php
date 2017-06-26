@@ -21,9 +21,10 @@ if ( !empty($stdin) ) {
 
         if ( $email = $email_parser->parse($stdin) ) {
 
-            if ( !empty($email->from) && $email_domain = @explode('@', $email->from, 2)[1] ) {
+            app_log('from: ' . $email->from);
+            app_log('to: ' . $email->to);
 
-                app_log('domain: ' . $email_domain);
+            if ( !empty($email->from) && $email_domain = @explode('@', $email->from, 2)[1] ) {
 
                 if ( $email_domain == AUTHORIZED_DOMAIN ) {
 

@@ -18,7 +18,7 @@ if ( $sock = fopen('php://stdin', 'r') ) {
         $email_from = parse_email_address($email_parser->getHeader('from'));
         $email_to   = parse_email_address($email_parser->getHeader('to'));
 
-        $reference = $email_parser->getHeader('subject');
+        $reference = get_string_between($email_parser->getHeader('subject'), '[', ']');
 
         $tel  = @explode('@', $email_to, 2)[0];
         $body = @explode("\n\n", str_replace("\r", "\n", $email_parser->getMessageBody('text')))[0];
@@ -79,7 +79,7 @@ if ( $sock = fopen('php://stdin', 'r') ) {
 
                     @mail(
                         $email_from,
-                        sprintf("SMS message to '%s' (%s) not authorized!", $tel, $reference),
+                        sprintf("SMS message to '%s' [%s] not authorized!", $tel, $reference),
                         sprintf("Cannot send your message to '%s'. Your email address (%s) is unauthorized!", $tel, $email_from),
                         sprintf("From: %s\r\nX-Mailer: PHP/%s", 'no-reply@' . SERVICE_DOMAIN, phpversion())
                     );

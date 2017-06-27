@@ -14,7 +14,7 @@ if ( !empty($_POST) ) {
 
         $email_to   = $message->from_email;
         $email_from = $from . '@' . SERVICE_DOMAIN;
-        $subject    = sprintf("SMS message from '%s' (%s)", $from, $message->reference);
+        $subject    = sprintf("SMS message from '%s' [%s]", $from, $message->reference);
         $headers    = sprintf("From: %s\r\nReply-To: %s\r\nX-Mailer: PHP/%s", $email_from, $email_from, phpversion());
 
         if ( @mail($email_to, $subject, $body, $headers) ) {

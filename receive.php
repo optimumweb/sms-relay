@@ -14,17 +14,23 @@ if ( !empty($_POST) ) {
         $email_to = $message->from_email;
         $subject  = sprintf("SMS message from '%s' [%s]", $from, $message->reference);
     } else {
-        $email_to = DEFAULT_EMAIL;
+        $email_to = defined('DEFAULT_EMAIL') ? DEFAULT_EMAIL : null;
         $subject  = sprintf("SMS message from '%s'", $from);
     }
 
-    $email_from = $from . '@' . SERVICE_DOMAIN;
-    $headers    = sprintf("From: %s\r\nReply-To: %s\r\nX-Mailer: PHP/%s", $email_from, $email_from, phpversion());
+    if ( !empty($email_to) ) {
 
-    if ( @mail($email_to, $subject, $body, $headers) ) {
-        app_log(sprintf("SMS message from '%s' relayed successfully to '%s'", $from, $email_to));
+        $email_from = $from . '@' . SERVICE_DOMAIN;
+        $headers    = sprintf("From: %s\r\nReply-To: %s\r\nX-Mailer: PHP/%s", $email_from, $email_from, phpversion());
+
+        if ( @mail($email_to, $subject, $body, $headers) ) {
+            app_log(sprintf("SMS message from '%s' relayed successfully to '%s'", $from, $email_to));
+        } else {
+            app_log(sprintf("SMS message from '%s' could not be relayed to '%s'", $from, $email_to));
+        }
+
     } else {
-        app_log(sprintf("SMS message from '%s' could not be relayed to '%s'", $from, $email_to));
+        app_log(sprintf("No recipient for SMS message from '%s'", $from));
     }
 
 }

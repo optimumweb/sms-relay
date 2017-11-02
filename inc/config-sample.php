@@ -1,6 +1,7 @@
 <?php
 
 define('SERVICE_DOMAIN', '');
+define('DEFAULT_EMAIL',  '');
 
 define('ADMIN_TOKEN', '');
 

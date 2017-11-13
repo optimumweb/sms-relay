@@ -20,8 +20,18 @@ if ( $sock = fopen('php://stdin', 'r') ) {
 
         $reference = get_string_between($email_parser->getHeader('subject'), '[', ']');
 
-        $tel  = @explode('@', $email_to, 2)[0];
-        $body = @explode("\n\n", str_replace("\r", "\n", $email_parser->getMessageBody('text')))[0];
+        if ( strpos($email_to, '@') !== false ) {
+            $tel = @explode('@', $email_to, 2)[0];
+        }
+
+        $body = $email_parser->getMessageBody('text');
+        $body = str_replace("\r", "\n", $body);
+
+        if ( strpos($body, '---') !== false ) {
+            $body = @explode('---', $body, 2)[0];
+        } elseif ( strpos($body, "\n\n\n") !== false ) {
+            $body = @explode("\n\n\n", $body, 2)[0];
+        }
 
         if ( !empty($tel) && !empty($body) ) {
 

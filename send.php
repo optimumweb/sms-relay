@@ -22,6 +22,7 @@ if ( $sock = fopen('php://stdin', 'r') ) {
 
         if ( strpos($email_to, '@') !== false ) {
             $tel = @explode('@', $email_to, 2)[0];
+            $tel = str_replace('-', '', $tel);
         }
 
         $body = $email_parser->getMessageBody('text');

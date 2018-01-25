@@ -22,12 +22,19 @@ if ( $sock = fopen('php://stdin', 'r') ) {
         $email_from = parse_email_address($email_parser->getHeader('from'));
         $email_to   = parse_email_address($email_parser->getHeader('to'));
 
+        app_log(sprintf("Email From: %s", $email_from));
+        app_log(sprintf("Email To: %s", $email_to));
+
         $reference = get_string_between($email_parser->getHeader('subject'), '[', ']');
+
+        app_log(sprintf("Reference: %s", $reference));
 
         if ( strpos($email_to, '@') !== false ) {
             $tel = @explode('@', $email_to, 2)[0];
             $tel = str_replace('-', '', $tel);
         }
+
+        app_log(sprintf("Tel: %s", $tel));
 
         $body = $email_parser->getMessageBody('text');
         $body = str_replace("\r", "\n", $body);
@@ -37,6 +44,8 @@ if ( $sock = fopen('php://stdin', 'r') ) {
         } elseif ( strpos($body, "\n\n\n") !== false ) {
             $body = @explode("\n\n\n", $body, 2)[0];
         }
+
+        app_log(sprintf("Body: %s", $body));
 
         if ( !empty($tel) && !empty($body) ) {
 

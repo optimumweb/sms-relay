@@ -7,6 +7,8 @@ require_once ABS_PATH . '/inc/init.php';
 
 $authorized = false;
 
+app_log("Receiving email...");
+
 if ( $sock = fopen('php://stdin', 'r') ) {
 
     app_log("Receiving data...");

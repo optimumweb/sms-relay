@@ -46,8 +46,8 @@ function mime_decode($raw)
         $guzzle_client = new GuzzleHttp\Client;
 
         $guzzle_response = $guzzle_client->post('https://mimedecoder.com', [
-            'headers' => [ 'Content-Type' => 'multipart/form-data' ],
-            'body'    => http_build_query([ 'raw' => $raw ])
+            //'headers' => [ 'Content-Type' => 'multipart/form-data' ],
+            'form_params' => [ 'raw' => $raw ]
         ]);
 
         if ( $guzzle_response_body = $guzzle_response->getBody() ) {

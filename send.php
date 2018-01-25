@@ -5,11 +5,11 @@ define('ABS_PATH', dirname(__FILE__));
 
 require_once ABS_PATH . '/inc/init.php';
 
-app_log("Receiving email...");
-
 $authorized = false;
 
 if ( $sock = fopen('php://stdin', 'r') ) {
+
+    app_log("Receiving data...");
 
     try {
 

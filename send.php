@@ -7,11 +7,7 @@ require_once ABS_PATH . '/inc/init.php';
 
 $authorized = false;
 
-app_log("Receiving email...");
-
 if ( $stdin = file_get_contents('php://stdin') ) {
-
-    app_log("Receiving data...");
 
     try {
 
@@ -20,12 +16,7 @@ if ( $stdin = file_get_contents('php://stdin') ) {
             $email_from = $email->from[0]->address;
             $email_to   = $email->to[0]->address;
 
-            app_log(sprintf("Email From: %s", $email_from));
-            app_log(sprintf("Email To: %s", $email_to));
-
             $reference = get_string_between($email->subject, '[', ']');
-
-            app_log(sprintf("Reference: %s", $reference));
 
             if ( strpos($email_to, '@') !== false ) {
                 $tel = @explode('@', $email_to, 2)[0];
@@ -41,8 +32,6 @@ if ( $stdin = file_get_contents('php://stdin') ) {
             } elseif ( strpos($body, "\n\n\n") !== false ) {
                 $body = @explode("\n\n\n", $body, 2)[0];
             }
-
-            app_log(sprintf("Body: %s", $body));
 
             if ( !empty($tel) && !empty($body) ) {
 

@@ -13,8 +13,8 @@ if ( $stdin = file_get_contents('php://stdin') ) {
 
         if ( $email = mime_decode($stdin) ) {
 
-            $email_from = $email->from[0]->address;
-            $email_to   = $email->to[0]->address;
+            $email_from = $email->from->address;
+            $email_to   = $email->to->address;
 
             $reference = get_string_between($email->subject, '[', ']');
 

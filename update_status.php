@@ -4,38 +4,42 @@ define('ABS_PATH', dirname(__FILE__));
 
 require_once ABS_PATH . '/inc/init.php';
 
-if ( !empty($_POST['SmsSid']) && $message = Message::where('twilio_message_sid', $_POST['SmsSid'], [ 'first' => true ]) ) {
+if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
 
-    if ( !empty($_POST['SmsStatus']) ) {
+    if ( !empty($_POST['SmsSid']) && $message = Message::where('twilio_message_sid', $_POST['SmsSid'], [ 'first' => true ]) ) {
 
-        app_log($message . ' status updated to ' . $_POST['SmsStatus']);
+        if ( !empty($_POST['SmsStatus']) ) {
 
-        $message->twilio_status = $_POST['SmsStatus'];
-        $message->save();
+            app_log($message . ' status updated to ' . $_POST['SmsStatus']);
 
-        switch ( $_POST['SmsStatus'] ) {
+            $message->twilio_status = $_POST['SmsStatus'];
+            $message->save();
 
-            case 'delivered':
+            switch ( $_POST['SmsStatus'] ) {
 
-                @mail(
-                    $message->from_email,
-                    sprintf("SMS message to '%s' [%s] sent successfully!", $message->to_tel, $message->reference),
-                    sprintf("Your message to '%s' [%s] has been delivered successfully!\r\nMessage: %s", $message->to_tel, $message->reference, $message->body),
-                    sprintf("From: %s\r\nX-Mailer: PHP/%s", $message->to_tel . '@' . SERVICE_DOMAIN, phpversion())
-                );
+                case 'delivered':
 
-                break;
+                    @mail(
+                        $message->from_email,
+                        sprintf("SMS message to '%s' [%s] sent successfully!", $message->to_tel, $message->reference),
+                        sprintf("Your message to '%s' [%s] has been delivered successfully!\r\nMessage: %s", $message->to_tel, $message->reference, $message->body),
+                        sprintf("From: %s\r\nX-Mailer: PHP/%s", $message->to_tel . '@' . SERVICE_DOMAIN, phpversion())
+                    );
 
-            case 'undelivered':
+                    break;
 
-                @mail(
-                    $message->from_email,
-                    sprintf("SMS message to '%s' [%s] has failed!", $message->to_tel, $message->reference),
-                    sprintf("Your message to '%s' [%s] has could not be delivered!\r\nMessage: %s", $message->to_tel, $message->reference, $message->body),
-                    sprintf("From: %s\r\nX-Mailer: PHP/%s", $message->to_tel . '@' . SERVICE_DOMAIN, phpversion())
-                );
+                case 'undelivered':
 
-                break;
+                    @mail(
+                        $message->from_email,
+                        sprintf("SMS message to '%s' [%s] has failed!", $message->to_tel, $message->reference),
+                        sprintf("Your message to '%s' [%s] has could not be delivered!\r\nMessage: %s", $message->to_tel, $message->reference, $message->body),
+                        sprintf("From: %s\r\nX-Mailer: PHP/%s", $message->to_tel . '@' . SERVICE_DOMAIN, phpversion())
+                    );
+
+                    break;
+
+            }
 
         }
 

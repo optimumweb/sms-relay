@@ -19,6 +19,8 @@ if ( !empty($stdin) ) {
 
         $message = MimeDecoder::decode($stdin);
 
+        app_log(var_export($message, true));
+
         $message_from = $message->from['address'];
 
         if ( is_array($message->to) && count($message->to) > 0 ) {

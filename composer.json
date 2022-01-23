@@ -1,7 +1,10 @@
 {
   "require": {
+    "php": "*",
+    "ext-json": "*",
     "twilio/sdk": "~6.33",
     "optimumweb/opencrate": "dev-master",
-    "guzzlehttp/guzzle": "~6.3"
+    "guzzlehttp/guzzle": "~6.3",
+    "php-mime-mail-parser/php-mime-mail-parser": "^7.0"
   }
 }

@@ -11,15 +11,9 @@ $authorized = false;
 
 $stdin = file_get_contents('php://stdin');
 
-app_log($stdin);
-
 if ( !empty($stdin) ) {
 
-    app_log("Stdin not empty!!");
-
     $message = MimeDecoder::decode($stdin);
-
-    app_log(var_export($message, true));
 
     $message_from = $message->from['address'];
 

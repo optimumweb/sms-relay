@@ -16,13 +16,8 @@ function app_log($message, $echo_message = false)
 
     $logfile = ABS_PATH . '/logs/' . date('Ymd') . '.log';
 
-    if ( !$remote_addr = $_SERVER['REMOTE_ADDR'] ) {
-        $remote_addr = "REMOTE_ADDR_UNKNOWN";
-    }
-
-    if ( !$request_uri = $_SERVER['REQUEST_URI'] ) {
-        $request_uri = "REQUEST_URI_UNKNOWN";
-    }
+    $remote_addr = $_SERVER['REMOTE_ADDR'] ?? "REMOTE_ADDR_UNKNOWN";
+    $request_uri = $_SERVER['REQUEST_URI'] ?? "REQUEST_URI_UNKNOWN";
 
     $date = date("Y-m-d H:i:s");
 

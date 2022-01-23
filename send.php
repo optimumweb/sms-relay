@@ -37,7 +37,6 @@ if ( !empty($stdin) ) {
         if ( strpos($message_to, '@') !== false ) {
             $tel = @explode('@', $message_to, 2)[0];
             $tel = str_replace('-', '', $tel);
-            app_log(sprintf("Tel: %s", $tel));
         }
 
         $body = $message->text;

@@ -14,7 +14,7 @@ function app_log($message, $echo_message = false)
         $message = (string) $message;
     }
 
-    $logfile = ABS_PATH . '/logs/' . date('Ymd');
+    $logfile = ABS_PATH . '/logs/' . date('Ymd') . '.log';
 
     if ( !$remote_addr = $_SERVER['REMOTE_ADDR'] ) {
         $remote_addr = "REMOTE_ADDR_UNKNOWN";

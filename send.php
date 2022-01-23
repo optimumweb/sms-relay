@@ -8,6 +8,7 @@ define('ABS_PATH', dirname(__FILE__));
 require_once ABS_PATH . '/inc/init.php';
 
 $authorized = false;
+$ignore = false;
 
 $stdin = file_get_contents('php://stdin');
 
@@ -15,7 +16,10 @@ if ( !empty($stdin) ) {
 
     $message = MimeDecoder::decode($stdin);
 
-    app_log(var_export($message, true));
+    if ( $message->headers['auto-submitted'] === 'auto-generated' || $message->headers['x-auto-response-suppress'] === 'All' ) {
+        $ignore = true;
+        app_log("Ignore auto-reply: {$message->subject}");
+    }
 
     $message_from = $message->from['address'];
 
@@ -69,7 +73,7 @@ if ( !empty($stdin) ) {
                     }
                 }
 
-                if ( $authorized ) {
+                if ( $authorized && !$ignore ) {
 
                     if ( strpos($tel, '+1') === false ) {
                         $tel = '+1' . $tel;
@@ -79,9 +83,9 @@ if ( !empty($stdin) ) {
 
                         $message = new Message([
                             'from_email' => $message_from,
-                            'to_tel'     => $tel,
-                            'reference'  => $reference,
-                            'body'       => $body
+                            'to_tel' => $tel,
+                            'reference' => $reference,
+                            'body' => $body,
                         ]);
 
                         if ( $message->send() ) {

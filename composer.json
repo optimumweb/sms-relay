@@ -1,6 +1,6 @@
 {
   "require": {
-    "twilio/sdk": "5.10.0",
+    "twilio/sdk": "~6.33",
     "optimumweb/opencrate": "dev-master",
     "guzzlehttp/guzzle": "~6.3"
   }

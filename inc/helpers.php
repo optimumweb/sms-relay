@@ -39,33 +39,6 @@ function app_log($message, $echo_message = false)
     return false;
 }
 
-function mime_decode($raw)
-{
-    try {
-
-        $guzzle_client = new GuzzleHttp\Client;
-
-        $guzzle_response = $guzzle_client->post('https://mimedecoder.com', [
-            'form_params' => [ 'raw' => $raw ]
-        ]);
-
-        if ( $guzzle_response_body = $guzzle_response->getBody() ) {
-            if ( $guzzle_response_json = json_decode($guzzle_response_body) ) {
-                return $guzzle_response_json;
-            } else {
-                app_log(sprintf("mime_decode - Could not decode response: %s", $guzzle_response_body));
-            }
-        } else {
-            app_log(sprintf("mime_decode - Empty response"));
-        }
-
-    } catch ( Exception $e ) {
-        app_log(sprintf("mime_decode - Exception thrown: %s", $e));
-    }
-
-    return false;
-}
-
 function get_string_between($str, $start, $end, $first_only = true, $on_if_no_start = true)
 {
     $btw = '';
@@ -90,9 +63,4 @@ function get_string_between($str, $start, $end, $first_only = true, $on_if_no_st
         }
     }
     return $btw;
-}
-
-function parse_email_address($str)
-{
-    return get_string_between($str, '<', '>');
 }

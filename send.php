@@ -9,7 +9,11 @@ require_once ABS_PATH . '/inc/init.php';
 
 $authorized = false;
 
-if ( $stdin = file_get_contents('php://stdin') ) {
+$stdin = file_get_contents('php://stdin');
+
+app_log($stdin);
+
+if ( !empty($stdin) ) {
 
     try {
 

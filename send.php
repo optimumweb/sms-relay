@@ -7,8 +7,6 @@ define('ABS_PATH', dirname(__FILE__));
 
 require_once ABS_PATH . '/inc/init.php';
 
-app_log("Initiating...");
-
 $authorized = false;
 
 $stdin = file_get_contents('php://stdin');

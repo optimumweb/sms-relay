@@ -7,6 +7,8 @@ define('ABS_PATH', dirname(__FILE__));
 
 require_once ABS_PATH . '/inc/init.php';
 
+app_log("Initiating...");
+
 $authorized = false;
 
 $stdin = file_get_contents('php://stdin');
@@ -15,7 +17,10 @@ if ( !empty($stdin) ) {
 
     $message = MimeDecoder::decode($stdin);
 
-    if ( $message->headers['auto-submitted'] === 'auto-generated' || $message->headers['x-auto-response-suppress'] === 'All' ) {
+    $auto_submitted = $message->headers['auto-submitted'] ?? null;
+    $auto_response_suppress = $message->headers['x-auto-response-suppress'] ?? null;
+
+    if ( $auto_submitted === 'auto-generated' || $auto_response_suppress === 'All' ) {
 
         // Ignore
         app_log("Ignore auto-reply: {$message->subject}");

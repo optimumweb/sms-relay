@@ -11,3 +11,8 @@ require_once ABS_PATH . '/inc/helpers.php';
 require_once ABS_PATH . '/inc/mime_decoder.php';
 
 require_once ABS_PATH . '/models/message.php';
+
+if ( defined('SENTRY_DSN') ) {
+    \Sentry\init(['dsn' => SENTRY_DSN]);
+    \Sentry\captureLastError();
+}

@@ -2,12 +2,12 @@
   "name": "optimumweb/sms-relay",
   "type": "project",
   "require": {
-    "php": "*",
+    "php": ">=8.1",
     "ext-json": "*",
     "ext-mailparse": "*",
     "twilio/sdk": "~6.33",
     "optimumweb/opencrate": "dev-master",
-    "guzzlehttp/guzzle": "~6.3",
-    "php-mime-mail-parser/php-mime-mail-parser": "^7.0"
+    "php-mime-mail-parser/php-mime-mail-parser": "^7.0",
+    "sentry/sdk": "^3.3"
   }
 }

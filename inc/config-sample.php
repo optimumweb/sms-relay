@@ -21,3 +21,4 @@ define('TWILIO_SMS_FROM',    '');
 
 define('SENTRY_DSN', '');
 define('SENTRY_ERROR_TYPES', E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
+define('SENTRY_TRACES_SAMPLE_RATE', 1.0);

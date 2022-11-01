@@ -16,37 +16,34 @@ class Message extends OpenCrate\Model
 
     public function __toString()
     {
-        return sprintf(
-            "[SMSRelay.Message id=%s from_email=%s to_tel=%s reference=%s body=%s twilio_message_id=%s created_at=%s]",
-            $this->id, $this->from_email, $this->to_tel, $this->reference, $this->body, $this->twilio_message_sid, $this->created_at
-        );
+        return "[SMSRelay.Message id={$this->id} from_email={$this->from_email} to_tel={$this->to_tel} reference={$this->reference} body={$this->body} twilio_message_id={$this->twilio_message_sid} created_at={$this->created_at}]";
     }
 
     public function send()
     {
-        if ( defined('TWILIO_ACCOUNT_SID') && defined('TWILIO_AUTH_TOKEN') && defined('TWILIO_SMS_FROM') ) {
-
+        if (
+            defined('TWILIO_ACCOUNT_SID')
+            && defined('TWILIO_AUTH_TOKEN')
+            && defined('TWILIO_SMS_FROM')
+        ) {
             try {
-
                 $twilio_client = new Twilio\Rest\Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 
                 $options = [
-                    'from'           => TWILIO_SMS_FROM,
-                    'body'           => $this->body,
-                    'statusCallback' => 'http://' . SERVICE_DOMAIN . '/update_status.php'
+                    'from' => TWILIO_SMS_FROM,
+                    'body' => $this->body,
+                    'statusCallback' => 'https://' . SERVICE_DOMAIN . '/update_status.php',
                 ];
 
                 $message = $twilio_client->messages->create($this->to_tel, $options);
 
-                if ( $message->sid !== null ) {
+                if ($message->sid !== null) {
                     $this->twilio_message_sid = $message->sid;
                     return true;
                 }
-
             } catch ( Exception $e ) {
-                app_log("Message::send - Exception thrown: " . $e);
+                app_log("Message::send - Exception thrown: {$e}");
             }
-
         }
 
         return false;
@@ -54,22 +51,18 @@ class Message extends OpenCrate\Model
 
     public function get_twilio_message()
     {
-        if ( defined('TWILIO_ACCOUNT_SID') && defined('TWILIO_AUTH_TOKEN') ) {
-
-            if ( $this->twilio_message_sid !== null ) {
-
+        if (
+            defined('TWILIO_ACCOUNT_SID')
+            && defined('TWILIO_AUTH_TOKEN')
+        ) {
+            if ($this->twilio_message_sid !== null) {
                 try {
-
                     $twilio_client = new Twilio\Rest\Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
-
                     return $twilio_client->messages($this->twilio_message_sid)->fetch();
-
-                } catch ( Exception $e ) {
+                } catch (Exception $e) {
                     app_log("Message::twilio_message - Exception thrown: " . $e);
                 }
-
             }
-
         }
 
         return false;
@@ -79,7 +72,7 @@ class Message extends OpenCrate\Model
     {
         return [
             'is_delivered'  => 0,
-            'twilio_status' => ''
+            'twilio_status' => '',
         ];
     }
 }

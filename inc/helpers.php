@@ -2,10 +2,10 @@
 
 function app_log($message, $echo_message = false)
 {
-    if ( is_array($message) ) {
+    if (is_array($message)) {
         $message = var_export($message, true);
-    } elseif ( is_object($message) ) {
-        if ( method_exists($message, '__toString') ) {
+    } elseif (is_object($message)) {
+        if (method_exists($message, '__toString')) {
             $message = (string) $message;
         } else {
             $message = var_export($message, true);
@@ -21,11 +21,11 @@ function app_log($message, $echo_message = false)
 
     $date = date("Y-m-d H:i:s");
 
-    if ( $echo_message ) {
+    if ($echo_message) {
         echo $message . PHP_EOL;
     }
 
-    if ( $fp = @fopen($logfile, "a") ) {
+    if ($fp = @fopen($logfile, "a")) {
         $result = fputcsv($fp, [ $date, $remote_addr, $request_uri, $message ]);
         fclose($fp);
         return $result > 0;
@@ -37,22 +37,22 @@ function app_log($message, $echo_message = false)
 function get_string_between($str, $start, $end, $first_only = true, $on_if_no_start = true)
 {
     $btw = '';
-    if ( !empty($str) && is_string($str) ) {
+    if (! empty($str) && is_string($str)) {
         $on = false;
-        if ( $on_if_no_start && strpos($str, $start) === false ) {
+        if ($on_if_no_start && ! str_contains($str, $start)) {
             $on = true;
         }
-        foreach ( str_split($str) as $char ) {
-            if ( $char == $start ) {
+        foreach (str_split($str) as $char) {
+            if ($char == $start) {
                 $on = true;
                 continue;
-            } elseif ( $char == $end ) {
+            } elseif ($char == $end) {
                 $on = false;
-                if ( $first_only ) {
+                if ($first_only) {
                     return $btw;
                 }
             }
-            if ( $on ) {
+            if ($on) {
                 $btw .= $char;
             }
         }

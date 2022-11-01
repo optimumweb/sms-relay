@@ -40,7 +40,7 @@ class Message
             'include_inline_attachments' => true,
         ], (array) $options);
 
-        if ( is_string($raw) && strlen($raw) > 0 ) {
+        if (is_string($raw) && strlen($raw) > 0) {
             $Parser = new Parser;
 
             $Parser->setText($raw);
@@ -58,8 +58,8 @@ class Message
 
             $attachments = $Parser->saveAttachments($options['save_dir'], $options['include_inline_attachments']);
 
-            if ( is_array($attachments) && count($attachments) > 0 ) {
-                foreach ( $attachments as $filepath ) {
+            if (is_array($attachments) && count($attachments) > 0) {
+                foreach ($attachments as $filepath) {
                     $this->attachments[] = new Attachment($filepath);
                 }
             }
@@ -89,16 +89,16 @@ class Message
      */
     public static function utf8ize($mixed)
     {
-        if ( is_array($mixed) ) {
-            foreach ( $mixed as $key => $value ) {
+        if (is_array($mixed)) {
+            foreach ($mixed as $key => $value) {
                 $mixed[$key] = static::utf8ize($value);
             }
-        } elseif ( is_object($mixed) ) {
-            foreach ( $mixed as $property => $value ) {
+        } elseif (is_object($mixed)) {
+            foreach ($mixed as $property => $value) {
                 $mixed->$property = static::utf8ize($value);
             }
-        } elseif ( is_string($mixed) ) {
-            if ( !static::is_utf8($mixed) ) {
+        } elseif (is_string($mixed)) {
+            if (! static::is_utf8($mixed)) {
                 return utf8_encode($mixed);
             }
         }
@@ -133,15 +133,15 @@ class Attachment
 
         $this->filename = basename($filepath);
 
-        if ( $this->filesize === null ) {
-            if ( $file_exists && $filesize = filesize($this->filepath) ) {
+        if ($this->filesize === null) {
+            if ($file_exists && $filesize = filesize($this->filepath)) {
                 $this->filesize = $filesize;
             }
         }
 
-        if ( $this->filetype === null ) {
-            if ( function_exists('mime_content_type') ) {
-                if ( $file_exists && $filetype = mime_content_type($this->filepath) ) {
+        if ($this->filetype === null) {
+            if (function_exists('mime_content_type')) {
+                if ($file_exists && $filetype = mime_content_type($this->filepath)) {
                     $this->filetype = $filetype;
                 }
             }

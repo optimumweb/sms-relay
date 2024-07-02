@@ -50,7 +50,9 @@ if (! empty($stdin)) {
             }
 
             if (defined('MESSAGE_MAXLENGTH') && is_int(MESSAGE_MAXLENGTH)) {
-                $body = substr($body, 0, MESSAGE_MAXLENGTH - 3) . '...';
+                if (strlen($body) > MESSAGE_MAXLENGTH) {
+                    $body = substr($body, 0, MESSAGE_MAXLENGTH - 3) . '...';
+                }
             }
 
             if (! empty($tel) && ! empty($body)) {

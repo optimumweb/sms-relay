@@ -51,6 +51,10 @@ if (!empty($stdin)) {
                 $body = explode("\n\n\n", $body, 2)[0];
             }
 
+            if (defined('MESSAGE_MAXLENGTH') && is_int(MESSAGE_MAXLENGTH)) {
+                $body = substr($body, 0, MESSAGE_MAXLENGTH - 3) . '...';
+            }
+
             if (! empty($tel) && ! empty($body)) {
                 if (! empty($message_from)) {
                     if (defined('AUTHORIZED_EMAILS')) {

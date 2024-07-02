@@ -7,17 +7,15 @@ define('ABS_PATH', dirname(__FILE__));
 
 require_once ABS_PATH . '/inc/init.php';
 
-$authorized = false;
-
 $stdin = file_get_contents('php://stdin');
 
-if (!empty($stdin)) {
+if (! empty($stdin)) {
     $message = MimeDecoder::decode($stdin);
 
     $auto_submitted = $message->headers['auto-submitted'] ?? null;
     $auto_response_suppress = $message->headers['x-auto-response-suppress'] ?? null;
 
-    if ($auto_submitted === 'auto-generated' || $auto_response_suppress === 'All') {
+    if (in_array($auto_submitted, ['auto-generated', 'auto-replied', 'auto-notified']) || $auto_response_suppress === 'All') {
         // Ignore
         app_log("Ignore auto-reply: {$message->subject}");
     } else {
@@ -25,7 +23,7 @@ if (!empty($stdin)) {
 
         if (is_array($message->to) && count($message->to) > 0) {
             foreach ($message->to as $to) {
-                if (!empty($to['address'])) {
+                if (! empty($to['address'])) {
                     if (str_contains($to['address'], SERVICE_DOMAIN)) {
                         $message_to = $to['address'];
                         break;
@@ -34,7 +32,7 @@ if (!empty($stdin)) {
             }
         }
 
-        if (!empty($message_to)) {
+        if (! empty($message_to)) {
             $reference = get_string_between($message->subject, '[', ']');
 
             if (str_contains($message_to, '@')) {
@@ -57,21 +55,31 @@ if (!empty($stdin)) {
 
             if (! empty($tel) && ! empty($body)) {
                 if (! empty($message_from)) {
-                    if (defined('AUTHORIZED_EMAILS')) {
-                        $authorized_emails = array_map('trim', explode(',', AUTHORIZED_EMAILS));
+                    $authorized = false;
 
-                        if (in_array($message_from, $authorized_emails)) {
+                    if (defined('AUTHORIZED_EMAILS')) {
+                        if (AUTHORIZED_EMAILS === '*') {
                             $authorized = true;
+                        } else {
+                            $authorized_emails = array_map('trim', explode(',', AUTHORIZED_EMAILS));
+
+                            if (in_array($message_from, $authorized_emails)) {
+                                $authorized = true;
+                            }
                         }
                     }
 
                     if (! $authorized) {
                         if (defined('AUTHORIZED_DOMAINS')) {
-                            $authorized_domains = array_map('trim', explode(',', AUTHORIZED_DOMAINS));
-                            $message_domain = explode('@', $message_from, 2)[1];
-
-                            if (in_array($message_domain, $authorized_domains)) {
+                            if (AUTHORIZED_DOMAINS === '*') {
                                 $authorized = true;
+                            } else {
+                                $authorized_domains = array_map('trim', explode(',', AUTHORIZED_DOMAINS));
+                                $message_from_domain = explode('@', $message_from, 2)[1];
+
+                                if (in_array($message_from_domain, $authorized_domains)) {
+                                    $authorized = true;
+                                }
                             }
                         }
                     }
@@ -100,7 +108,7 @@ if (!empty($stdin)) {
                             app_log($e);
                         }
                     } else {
-                        app_log("No authorization code supplied!");
+                        app_log("Sender is not authorized!");
 
                         mail(
                             $message_from,

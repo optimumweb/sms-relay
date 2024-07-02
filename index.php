@@ -1,3 +1,3 @@
 <?php
 
-Message::get_PDO();
+Message::find(1);

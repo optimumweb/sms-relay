@@ -4,3 +4,4 @@ error_log
 /vendor
 /inc/config.php
 .htaccess
+/error.log

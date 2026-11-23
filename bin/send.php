@@ -3,7 +3,7 @@
 
 use MimeDecoder\MimeDecoder;
 
-define('ABS_PATH', dirname(__FILE__));
+define('ABS_PATH', dirname(__DIR__));
 
 require_once ABS_PATH . '/inc/init.php';
 

@@ -36,6 +36,8 @@ class Message
     public function __construct($raw, $options = [])
     {
         $options = array_merge([
+            // Attachments are only written to disk when explicitly requested (the caller must clean them up)
+            'save_attachments' => false,
             'save_dir' => sys_get_temp_dir(),
             'include_inline_attachments' => true,
         ], (array) $options);
@@ -56,11 +58,13 @@ class Message
             $this->headersRaw = $Parser->getHeadersRaw();
             $this->headers = $Parser->getHeaders();
 
-            $attachments = $Parser->saveAttachments($options['save_dir'], $options['include_inline_attachments']);
+            if ($options['save_attachments']) {
+                $attachments = $Parser->saveAttachments($options['save_dir'], $options['include_inline_attachments']);
 
-            if (is_array($attachments) && count($attachments) > 0) {
-                foreach ($attachments as $filepath) {
-                    $this->attachments[] = new Attachment($filepath);
+                if (is_array($attachments) && count($attachments) > 0) {
+                    foreach ($attachments as $filepath) {
+                        $this->attachments[] = new Attachment($filepath);
+                    }
                 }
             }
         }

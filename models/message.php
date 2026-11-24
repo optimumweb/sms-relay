@@ -16,7 +16,29 @@ class Message extends OpenCrate\Model
 
     public function __toString()
     {
-        return "[SMSRelay.Message id={$this->id} from_email={$this->from_email} to_tel={$this->to_tel} reference={$this->reference} body={$this->body} twilio_message_id={$this->twilio_message_sid} created_at={$this->created_at}]";
+        // The message body is deliberately left out to keep message content out of the logs
+        $body_length = mb_strlen((string) $this->body);
+
+        return "[SMSRelay.Message id={$this->id} from_email={$this->from_email} to_tel={$this->to_tel} reference={$this->reference} body_length={$body_length} twilio_message_id={$this->twilio_message_sid} created_at={$this->created_at}]";
+    }
+
+    /**
+     * Number of messages created since a Unix timestamp, optionally for a single sender.
+     */
+    public static function count_since($since, $from_email = null)
+    {
+        $query = sprintf("SELECT COUNT(*) FROM %s WHERE created_at >= :since", static::$db_table);
+        $params = [ 'since' => (int) $since ];
+
+        if ($from_email !== null) {
+            $query .= " AND from_email = :from_email";
+            $params['from_email'] = $from_email;
+        }
+
+        $stmt = static::get_PDO()->prepare($query);
+        $stmt->execute($params);
+
+        return (int) $stmt->fetchColumn();
     }
 
     public function send()
